@@ -4,6 +4,10 @@ const SALT_FACTOR = 12;
 
 const router = require("express").Router();
 
+// Require necessary (isLoggedOut and isLiggedIn) middleware in order to control access to specific routes
+const isLoggedOut = require("../middleware/isLoggedOut");
+const isLoggedIn = require("../middleware/isLoggedIn");
+
 /**
  * signup
  */
@@ -57,6 +61,51 @@ router.post('/signup', async (req, res, next) => {
 })
 
 
+// // Search the database for a user with the username submitted in the form
+// User.findOne({ username }).then((found) => {
+//   // If the user is found, send the message username is taken
+//   if (found) {
+//     return res
+//       .status(400)
+//       .render("auth.signup", { errorMessage: "Username already taken." });
+//   }
+
+//   // if user is not found, create a new user - start with hashing the password
+//   return bcrypt
+//     .genSalt(saltRounds)
+//     .then((salt) => bcrypt.hash(password, salt))
+//     .then((hashedPassword) => {
+//       // Create a user and save it in the database
+//       return User.create({
+//         username,
+//         password: hashedPassword,
+//       });
+//     })
+//     .then((user) => {
+//       // Bind the user to the session object
+//       req.session.user = user;
+//       res.redirect("/");
+//     })
+//     .catch((error) => {
+//       if (error instanceof mongoose.Error.ValidationError) {
+//         return res
+//           .status(400)
+//           .render("auth/signup", { errorMessage: error.message });
+//       }
+//       if (error.code === 11000) {
+//         return res.status(400).render("auth/signup", {
+//           errorMessage:
+//             "Username need to be unique. The username you chose is already in use.",
+//         });
+//       }
+//       return res
+//         .status(500)
+//         .render("auth/signup", { errorMessage: error.message });
+//     });
+// });
+
+
+
 /**
  * login
 */
@@ -65,7 +114,7 @@ router.get('/login', (req, res) => {
     res.render('auth/login');
   })
   
-router.post('/login', async (req, resxt) => {
+router.post('/login', async (req, res, next) => {
     const { email, password } = req.body;
   
     if(!email || !password){
