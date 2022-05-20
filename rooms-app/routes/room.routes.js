@@ -52,7 +52,7 @@ router.post("/:id/edit", async (req, res, next) => {
       {
         name,
         description,
-        imageUrl,
+        imgUrl,
         owner,
         reviews,
       },
@@ -64,6 +64,19 @@ router.post("/:id/edit", async (req, res, next) => {
     res.redirect(`/rooms/${id}`);
   } catch (error) {
     next(error);
+  }
+});
+
+router.post("/:id/review", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { review } = req.body;
+    await Room.findByIdAndUpdate(
+      id, { reviews }
+    );
+    res.redirect(`/rooms/${id}`);
+  } catch(err){
+    next(err);
   }
 });
 
