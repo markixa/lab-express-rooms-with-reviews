@@ -2,14 +2,11 @@ const { Schema, model } = require("mongoose");
 
 const roomSchema = new Schema({
     name: { 
-        type: String 
+        type: String,
+        require: true 
     },
-    description: { 
-        type: String 
-    },
-    imageUrl: { 
-        type: String 
-    },
+    description: String,
+    imageUrl: String,
     owner: { 
         type: Schema.Types.ObjectId, 
         ref: "User" },
@@ -18,6 +15,6 @@ const roomSchema = new Schema({
         ref: "Review" }]
   });
 
-const Room = model("User", roomSchema);
+const Room = model("Room", roomSchema);
 
 module.exports = Room;

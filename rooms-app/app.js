@@ -31,6 +31,13 @@ app.use("/", index);
 const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
 
+const roomRoutes = require('./routes/room.routes');
+app.use('/rooms', roomRoutes);
+
+// const reviewRoutes = require('./routes/review.routes');
+// app.use('/review', reviewRoutes);
+
+
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 

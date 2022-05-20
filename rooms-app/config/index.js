@@ -25,9 +25,6 @@ const session = require("express-session");
 // https://www.npmjs.com/package/connect-mongo
 const MongoStore = require("connect-mongo");
 
-// Connects the mongo uri to maintain the same naming structure
-const MONGO_URI = require("../utils/consts");
-
 // Middleware configuration
 module.exports = (app) => {
   // In development environment the app logs
@@ -53,10 +50,13 @@ module.exports = (app) => {
     session({
       secret: process.env.SESSION_SECRET || "super hyper secret key",
       resave: false,
-      saveUninitialized: false,
+      saveUninitialized: true,
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 2,
+      },
       store: MongoStore.create({
-        mongoUrl: MONGO_URI,
-      }),
+        mongoUrl: process.env.MONGO_URI || "mongodb://localhost/lab-express-basic-auth",
+      })
     })
   );
 };
