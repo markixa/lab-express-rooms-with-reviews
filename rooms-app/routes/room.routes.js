@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Room = require("../models/Room.model");
-const User = require("../models/User.model");
+const Review = require("../models/Review.model");
 const isLoggedIn = require("../middleware/isLoggedIn");
 
 router.get("/", async (req, res, next) => {
@@ -67,17 +67,58 @@ router.post("/:id/edit", async (req, res, next) => {
   }
 });
 
-router.post("/:id/review", async (req, res, next) => {
+/**
+ * create comment
+ */
+
+router.post("/:id/comment", async (req, res, next) => {
+  res.render("comments/comment-create");
   try {
     const { id } = req.params;
     const { review } = req.body;
     await Room.findByIdAndUpdate(
       id, { reviews }
     );
-    res.redirect(`/rooms/${id}`);
+    res.redirect('/rooms/list');
   } catch(err){
     next(err);
   }
 });
+
+/**
+ * edit comment
+ */
+
+ router.post("/:id/comment-review", async (req, res, next) => {
+  res.render("comments/comment-update");
+  try {
+    const { id } = req.params;
+    const { review } = req.body;
+    await Room.findByIdAndUpdate(
+      id, { reviews }
+    );
+    res.redirect('/rooms/list');
+  } catch(err){
+    next(err);
+  }
+});
+
+/**
+ * delete comment
+ */
+
+ router.post("/:id/del", isLoggedIn, async (req, res, next) => {
+  res.render("comments/comment-delete");
+  try {
+    const { id } = req.params;
+    await Review.findByIdAndDelete(id);
+
+    res.redirect('/rooms/list');
+  } catch (error) {
+    next(error);
+  }
+})
+
+
 
 module.exports = router;
